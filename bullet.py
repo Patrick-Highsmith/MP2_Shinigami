@@ -3,38 +3,47 @@ import collision as col
 import math
 import resources
 
-def bullet_action(bullet,target_list,time_elapse):
-	bullet.obj_x += bullet.obj_vx * bullet.sp_mod
-	bullet.obj_y += bullet.obj_vy * bullet.sp_mod
-	bullet.obj_vx += bullet.obj_ax
-	bullet.obj_vy += bullet.obj_ay
-	#Update bullet location
-	#Just add more behavior like if bullet is homing etc
-	if bullet.modifiers["homing"] and len(target_list)>0:
-		closest = target_list[0]
-		distance = col.get_distance(bullet.obj_x,bullet.obj_y,target_list[0].x,target_list[0].y)
-		for t in target_list:
-			temp = col.get_distance(bullet.obj_x,bullet.obj_y,t.x,t.y)
-			if temp < distance and temp < 400:
-				distance = temp
-				closest = t
-		if abs(closest.x-bullet.obj_x) < 20:
-			bullet.obj_vx = 0
-		elif closest.x < bullet.obj_x:
-			bullet.obj_vx -= 1
-		elif closest.x > bullet.obj_x:
-			bullet.obj_vx += 1
+def bullet_action(bullet, target_list, time_elapse, pickup_list):
+    bullet.obj_x += bullet.obj_vx * bullet.sp_mod
+    bullet.obj_y += bullet.obj_vy * bullet.sp_mod
+    bullet.obj_vx += bullet.obj_ax
+    bullet.obj_vy += bullet.obj_ay
 
-	if bullet.obj_y > 800 or bullet.obj_y < 0 or bullet.obj_x > 600 or bullet.obj_x < 0:
-		bullet.destroy = True
-	for target in target_list:
-		if col.get_distance(bullet.obj_x,bullet.obj_y,target.x,target.y) <= 40:
-			#resources.explosion_fx.play()
-			if bullet.modifiers["piercing"] == False:
-				bullet.destroy = True
-			target.life -= bullet.damage * bullet.dam_mod
+    if bullet.modifiers["homing"] and len(target_list) > 0:
+        closest = target_list[0]
+        distance = col.get_distance(bullet.obj_x, bullet.obj_y, target_list[0].x, target_list[0].y)
+        for t in target_list:
+            temp = col.get_distance(bullet.obj_x, bullet.obj_y, t.x, t.y)
+            if temp < distance and temp < 400:
+                distance = temp
+                closest = t
+        if abs(closest.x - bullet.obj_x) < 20:
+            bullet.obj_vx = 0
+        elif closest.x < bullet.obj_x:
+            bullet.obj_vx -= 1
+        elif closest.x > bullet.obj_x:
+            bullet.obj_vx += 1
 
-	return bullet
+    # Destroy bullet if out of bounds — piercing bullets also die here
+    if bullet.obj_y > 800 or bullet.obj_y < 0 or bullet.obj_x > 600 or bullet.obj_x < 0:
+        bullet.destroy = True
+
+    # Hit enemies
+    for target in target_list:
+        if col.get_distance(bullet.obj_x, bullet.obj_y, target.x, target.y) <= 40:
+            if bullet.modifiers["piercing"] == False:
+                bullet.destroy = True          # non-piercing: destroy on contact
+            target.life -= bullet.damage * bullet.dam_mod
+            # piercing bullets keep going — only the out-of-bounds check above destroys them
+
+    # Hit pickups — check bullet.pu against each pickup in pickup_list
+    for pickup in pickup_list:
+        if col.get_distance(bullet.obj_x, bullet.obj_y, pickup.x, pickup.y) <= 40:
+            if bullet.modifiers["piercing"] == False:
+                bullet.destroy = True          # non-piercing: destroyed by pickup contact too
+            pickup.collected = True            # trigger the pickup
+
+    return bullet
 
 def bullet_action_no_collision(bullet):
 	bullet.obj_x += bullet.obj_vx
@@ -86,3 +95,22 @@ class explosion(object):
 		self.damage = 1 #multiplied by duration
 		self.duration = 30 #1 sec
 		self.timer = 1 #counts from 1 to duration
+
+# a bullet with the homing modifier pre-enabled
+class homing_bullet(bullet):
+    def __init__(self):
+        super(homing_bullet, self).__init__()
+        self.modifiers["homing"] = True
+
+# grants the homing bullet feature when picked up
+class homing_item(object):
+    def __init__(self):
+        super(homing_item, self).__init__()
+        self.x = 0
+        self.y = 0
+        self.name = "Homing Upgrade"
+        self.collected = False
+
+    def apply(self, bullet_instance):
+        bullet_instance.modifiers["homing"] = True
+        self.collected = True
