@@ -1,4 +1,4 @@
-import gui as gui
+import gui as g
 import pyglet
 import ship as ship
 import bullet as bull
@@ -117,14 +117,14 @@ buff_list = ["axe","bullet_d","bullet_s","dash_c","dash_d","enemy_l","explosive"
 
 def player_movement():
 	global ship_speed,dash_distance,melee_midswing,ship_melee,ship_shield,ship_dash,dash_now,sword_now,key_left_press,key_right_press,key_up_press,key_down_press,key_gun_press,key_melee_press,key_dash_press,gun_in_cooldown,gun_cooldown,Player_Bullets,dash_time,dash_first_use
-	temp = gui.get_player_coordinates()
+	temp = g.get_player_coordinates()
 	x = temp[0]
 	y = temp[1]
 	if key_left_press or key_right_press or key_up_press or key_down_press:
 		temp = ship.ship_move(x,y,key_left_press,key_right_press,key_up_press,key_down_press,ship_speed)
 		x = temp[0]
 		y = temp[1]
-		gui.player_move(x,y)
+		g.player_move(x,y)
 	if time_elapse % gun_cooldown == 0: 			### Rate of fire as of now
 		gun_in_cooldown = True
 	if key_gun_press:
@@ -138,7 +138,7 @@ def player_movement():
 			temp = ship.ship_dash(x,y,key_left_press,key_right_press,key_up_press,key_down_press, 0,dash_distance)
 			x = temp[0]
 			y = temp[1]
-			gui.player_move(x,y)
+			g.player_move(x,y)
 			dash_first_use = False
 			ship_dash = False
 	if time_elapse-dash_now >= dash_cooldown or dash_first_use:
@@ -151,7 +151,7 @@ def player_movement():
 			ship_melee = False
 	if time_elapse-sword_now >= melee_cooldown:
 		ship_melee = True
-	gui.update_ship_stat(ship_shield,ship_dash,ship_melee)
+	g.update_ship_stat(ship_shield,ship_dash,ship_melee)
 
 def move_bullets():
 	global Player_Bullets, Enemy_Bullets, Explosion_list, bullet_d_mod, bullet_s_mod
@@ -179,11 +179,11 @@ def move_bullets():
 
 	for exp in Explosion_list:
 		bull.explosion_action(exp,Enemy_list)
-	gui.update_bullet_list(Player_Bullets,Enemy_Bullets,Explosion_list)
+	g.update_bullet_list(Player_Bullets,Enemy_Bullets,Explosion_list)
 
 def move_enemies():
 	global Enemy_list, Enemy_Bullets, time_elapse,Player_Bullets, Explosion_list, score
-	temp = gui.get_player_coordinates()
+	temp = g.get_player_coordinates()
 	plr_point = {"x":temp[0],"y":temp[1]}
 	dead_enemy = []
 	for enemy in Enemy_list:
@@ -202,8 +202,8 @@ def move_enemies():
 		if temp_bullet != None:
 			Enemy_Bullets.append(temp_bullet)
 
-	gui.update_bullet_list(Player_Bullets,Enemy_Bullets, Explosion_list)
-	gui.update_enemy_list(Enemy_list)
+	g.update_bullet_list(Player_Bullets,Enemy_Bullets, Explosion_list)
+	g.update_enemy_list(Enemy_list)
 
 def upgrade():
 	global time_elapse, plr_level, pause,buff_list, options, score
@@ -215,15 +215,15 @@ def upgrade():
 			ran = r.SystemRandom()
 			x = ran.randint(0,len(buff_list)-1)
 			options.append(buff_list[x])
-		gui.get_options(options)
-		gui.paused(True)
+		g.get_options(options)
+		g.paused(True)
 	if pause:
-		x = gui.check_option()
+		x = g.check_option()
 		if x != 0:
 			pause = False
 			print(options[x-1])
 			level_up(options[x-1])
-			gui.reset_option()
+			g.reset_option()
 
 def level_up(buff):
 	global bullet_d_mod,bullet_s_mod,enemy_l_mod,buff_list, melee_base_damage, dash_cooldown, dash_distance, gun_explosive, gun_homing, ship_life, gun_piercing, shield_max_life,shield_cooldown, shield_regen, melee_range, melee_cooldown, ship_speed
@@ -273,7 +273,7 @@ def level_up(buff):
 def melee_handler():
 	global melee_midswing, melee_reach, melee_range, melee_base_damage, melee_angle, Enemy_list
 	if melee_midswing:
-		temp = gui.get_player_coordinates()
+		temp = g.get_player_coordinates()
 		x = temp[0]
 		y = temp[1]
 		if melee_angle < melee_range:
@@ -281,12 +281,12 @@ def melee_handler():
 		else:
 			melee_midswing = False
 			melee_angle = 0
-		gui.update_sword(x, y, melee_angle, melee_reach)
+		g.update_sword(x, y, melee_angle, melee_reach)
 		bull.melee_action(melee_base_damage, melee_reach, Enemy_list, x, y, melee_angle)
 
 def bullet_collision():
 	global score,time_elapse,Enemy_Bullets, shield_life, ship_life, shield_cooldown, shield_broke, shield_regen
-	temp = gui.get_player_coordinates()
+	temp = g.get_player_coordinates()
 	x = temp[0]
 	y = temp[1]
 	if shield_life < shield_max_life and shield_broke <= 0:
@@ -303,14 +303,10 @@ def bullet_collision():
 				ship_life -= 1
 				print(ship_life)
 			b.destroy = True
-	gui.update_life(shield_life, ship_life)
+	g.update_life(shield_life, ship_life)
 	if ship_life <= 0:
-		gui.game_over(score,time_elapse)
-<<<<<<< HEAD
+		g.game_over(score,time_elapse)
 		sc.add_score(time_elapse,score)
-=======
-		sc.add_score(score)
->>>>>>> 0ea248cd2325bd22d4840455da76482aa8b79f64
 
 #==========================================================================================#
 #									Input Check											   #
@@ -318,15 +314,15 @@ def bullet_collision():
 
 def check_input(dt):
 	global pause,Enemy_list,time_elapse,key_left_press,key_right_press,key_up_press,key_down_press,key_gun_press,key_melee_press,key_dash_press
-	key_left_press = gui.keyboard("left")
-	key_right_press = gui.keyboard("right")
-	key_up_press = gui.keyboard("up")
-	key_down_press = gui.keyboard("down")
-	key_melee_press = gui.keyboard("melee")
-	key_dash_press = gui.keyboard("dash")
-	key_gun_press = gui.keyboard("gun")
+	key_left_press = g.keyboard("left")
+	key_right_press = g.keyboard("right")
+	key_up_press = g.keyboard("up")
+	key_down_press = g.keyboard("down")
+	key_melee_press = g.keyboard("melee")
+	key_dash_press = g.keyboard("dash")
+	key_gun_press = g.keyboard("gun")
 	#===============================updating time related variables
-	if gui.game_start():
+	if g.game_start():
 		if pause == False:
 			time_elapse += 1
 		else:
@@ -334,7 +330,7 @@ def check_input(dt):
 	else:
 		time_elapse = 0
 	#===============================checking other things
-	if gui.game_start():
+	if g.game_start():
 		upgrade()
 		if pause == False:
 			player_movement()
@@ -349,6 +345,6 @@ pyglet.clock.schedule_interval(check_input,1/30)
 #==========================================================================================#
 #								GUI calling, variables and functions					   #
 
-gui.on_run() 	
+g.on_run() 	
 
-gui.recieve_vars(game_screen)
+g.recieve_vars(game_screen)

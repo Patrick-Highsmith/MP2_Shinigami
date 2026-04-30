@@ -39,10 +39,10 @@ stroy_index = 0
 game_window = pyglet.window.Window(600,800)
 
 #Setting Image layers
-group_background = pyglet.graphics.OrderedGroup(0)
-group_midground = pyglet.graphics.OrderedGroup(1)
-group_foreground = pyglet.graphics.OrderedGroup(2)
-group_etc = pyglet.graphics.OrderedGroup(3)
+group_background = pyglet.graphics.Group(order=0)
+group_midground = pyglet.graphics.Group(order=1)
+group_foreground = pyglet.graphics.Group(order=2)
+group_etc = pyglet.graphics.Group(order=3)
 
 #Handle player rotation
 temp_x = 0

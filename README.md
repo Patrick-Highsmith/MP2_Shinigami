@@ -10,8 +10,8 @@ Things to do:
 
 -add homing feature to bullet (check bullet.py, bullet_action)
 -destroy bullet if in contact (check bullet.pu, add to bullet_action)
-      -set self.destroy = True to destroy
-      -for piercing=true, destroy only if outside screen
+      -set self.destroy = True to destroy #done
+      -for piercing=true, destroy only if outside screen #done
 
 -add more enemies (check enemy.py, make more classes)
       - give simple ai, on their movement pattern when called
