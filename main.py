@@ -130,7 +130,8 @@ def player_movement():
 	if key_gun_press:
 		if gun_in_cooldown:
 			gun_in_cooldown = False
-			Player_Bullets.append(ship.ship_gun(x,y,gun_explosive,gun_homing,gun_piercing,gun_base_damage))
+			dir_x, dir_y = g.get_facing_direction()
+			Player_Bullets.append(ship.ship_gun(x, y, gun_explosive, gun_homing, gun_piercing, gun_base_damage, dir_x, dir_y))
 
 	if key_dash_press:
 		dash_now = time_elapse
@@ -157,7 +158,7 @@ def move_bullets():
 	global Player_Bullets, Enemy_Bullets, Explosion_list, bullet_d_mod, bullet_s_mod
 	destroy_bullet = []
 	for bullet in range(0,len(Player_Bullets)):
-		Player_Bullets[bullet] = bull.bullet_action(Player_Bullets[bullet],Enemy_list,0)
+		Player_Bullets[bullet] = bull.bullet_action(Player_Bullets[bullet],Enemy_list,0,[])
 		Player_Bullets[bullet].dam_mod = bullet_d_mod
 		if Player_Bullets[bullet].destroy:
 			destroy_bullet.append(Player_Bullets[bullet])
@@ -187,7 +188,7 @@ def move_enemies():
 	plr_point = {"x":temp[0],"y":temp[1]}
 	dead_enemy = []
 	for enemy in Enemy_list:
-		enemy = enemy.move()
+		enemy = enemy.move(time_elapse)
 		if enemy.life <= 0:
 			dead_enemy.append(enemy)
 			score += enemy.points
@@ -234,7 +235,7 @@ def level_up(buff):
 	elif buff == "bullet_s":
 		bullet_s_mod /= 1.5
 	elif buff == "dash_c":
-		dash_cooldown == dash_cooldown//1.5
+		dash_cooldown = dash_cooldown//1.5
 	elif buff == "dash_d":
 		dash_distance *= 1.5
 	elif buff == "enemy_l":

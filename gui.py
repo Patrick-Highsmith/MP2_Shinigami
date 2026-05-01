@@ -386,6 +386,10 @@ def get_player_coordinates():
 	global spr_player
 	return [spr_player.x, spr_player.y]
 
+def get_facing_direction():
+    global temp_x, temp_y
+    return temp_x, temp_y
+
 def update_life(shield,lifex):
 	global shield_life, life
 	shield_life = shield

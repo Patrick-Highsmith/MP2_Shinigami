@@ -16,7 +16,7 @@ class Enemy_0a(object):
 		self.id = 'easy_0'
 		self.points = 5
 
-	def move(self):
+	def move(self, time = None):
 		self.y -= 2
 		return self
 
@@ -50,7 +50,7 @@ class Enemy_0b(object):
 		self.id = 'easy_0'
 		self.points = 5
 
-	def move(self):
+	def move(self, time = None):
 		self.y -= 2
 		return self
 
@@ -84,7 +84,7 @@ class Enemy_0c(object):
 		self.id = 'easy_0'
 		self.points = 5
 
-	def move(self):
+	def move(self, time = None):
 		self.y -= 2
 		return self
 
@@ -118,7 +118,7 @@ class Enemy_0d(object):
 		self.id = 'easy_0'
 		self.points = 5
 
-	def move(self):
+	def move(self, time = None):
 		self.y -= 2
 		return self
 
@@ -152,7 +152,7 @@ class Enemy_0e(object):
 		self.id = 'easy_0'
 		self.points = 5
 
-	def move(self):
+	def move(self, time = None):
 		self.y -= 2
 		return self
 
@@ -190,7 +190,7 @@ class Enemy_1(object):
 		self.points = 5						#Points
 
 
-	def move(self, time):		
+	def move(self, time = None):		
 		self.y -= 3							###Velocity
 		return self						
 
@@ -221,7 +221,7 @@ class Enemy_2(object):
 		self.points = 8
 
 
-	def move(self, time):
+	def move(self, time = None):
 		if self.x == 50 and self.y > 250:		###Moves downwards
 			self.left = False
 			self.down = True
@@ -267,7 +267,7 @@ class Enemy_3(object):
 		self.points = 12
 
 
-	def move(self):	
+	def move(self, time = None):	
 		self.y += 4			
 		self.x -= 3
 		return self
@@ -299,7 +299,7 @@ class Enemy_4(object):
 		self.points = 20
 
 
-	def move(self):	
+	def move(self, time = None):	
 		self.y += 4
 		self.x += 3
 		return self
@@ -331,7 +331,7 @@ class Enemy_5(object):
 		self.points = 30
 
 
-	def move(self, time):			
+	def move(self, time = None):			
 		self.y -= 3					
 		return self	
 
@@ -360,7 +360,7 @@ class Enemy_6(object):
 		self.right = True
 		self.points = 40
 
-	def move(self,time):		
+	def move(self,time = None):		
 		if self.right == True: 
 			self.x += 2.5
 
@@ -401,7 +401,7 @@ class Enemy_7(object):
 		self.right = False
 		self.points = 50
 
-	def move(self, time):		
+	def move(self, time = None):		
 		if self.right == False: 	
 			self.x -= 2.5
 
@@ -443,7 +443,7 @@ class Enemy_8(object):
 		self.down = True
 		self.points = 65
 
-	def move(self, time):		
+	def move(self, time = None):		
 		if self.y > 400 and self.down:
 			self.y -= 2.5					
 
@@ -496,7 +496,7 @@ class Enemy_9(object):			#	  _|_|
 		self.down = False
 		self.points = 80
 
-	def move(self):	
+	def move(self,time = None):	
 		if self.y == 575 and self.x < 550 and not self.down:
 			self.x +=2.5
 
@@ -547,7 +547,7 @@ class Enemy_10(object):				#|_|_
 		self.down = False
 		self.points = 100
 
-	def move(self):	
+	def move(self, time = None):	
 		if self.y == 575 and self.x > 50 and not self.down:
 			self.x -=2.5
 

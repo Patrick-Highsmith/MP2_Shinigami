@@ -1,9 +1,9 @@
 import os
-filepath =  os.path.normpath('resc/scores.txt')
+filepath = os.path.normpath('resc/scores.txt')
 
 def get_scores():
 	#get scores from file
-	scores = list()
+	scores = []                         
 	with open(filepath) as file:
 		line = file.readline().strip()
 		while line:
@@ -12,22 +12,9 @@ def get_scores():
 			line = file.readline().strip()
 	return scores
 
-def add_score(score):
+def add_score(time_elapse, score):      # fix 2: added time_elapse
 	#add to file
-<<<<<<< HEAD
 	name = input("Input your name: ")
-	scores = get_scores()
-	scores[name]=score
-	with open(filepath, 'r') as file:
-		# read a list of lines into data
-    		data = file.readlines()
-	temp = ''.join(data).split(name+':'+str(scores[name])+'\n')
-	data = temp[0] + name+':'+str(score)+'\n' + temp[1]
-	with open(filepath, 'w') as file:
-		#writes back to file
-		file.add(data)
-	scores[name]=score
-=======
 	data = list()
 	with open(filepath, 'r') as file:
 		# read a list of lines into data
@@ -48,4 +35,3 @@ def add_score(score):
 	with open(filepath, 'w') as file:
 		#writes back to file
 		file.writelines(scores)
->>>>>>> 0ea248cd2325bd22d4840455da76482aa8b79f64

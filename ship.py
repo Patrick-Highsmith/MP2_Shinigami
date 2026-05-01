@@ -17,18 +17,21 @@ def ship_move(x,y,left,right,up,down,speed):
 		y-=speed
 	return [x,y]
 
-def ship_gun(x,y,ex,ho,pi,dam):
-	#modifiers = stats
-	#create bullet object/class if cooldown = 0
-	bullet = b.bullet() #??, make var bullet an object bullet from bullet.py
-	bullet.obj_x = x
-	bullet.obj_y = y
-	bullet.obj_vy = 10
-	bullet.modifiers["explosive"] = ex
-	bullet.modifiers["homing"] = ho
-	bullet.modifiers["piercing"] = pi
-	bullet.damage = dam
-	return bullet
+def ship_gun(x, y, ex, ho, pi, dam, dir_x, dir_y):
+    bullet = b.bullet()
+    bullet.obj_x = x
+    bullet.obj_y = y
+    length = math.sqrt(dir_x**2 + dir_y**2)
+    if length == 0:
+        dir_x, dir_y = 0, 1
+        length = 1
+    bullet.obj_vx = (dir_x / length) * 10
+    bullet.obj_vy = (dir_y / length) * 10
+    bullet.modifiers["explosive"] = ex
+    bullet.modifiers["homing"] = ho
+    bullet.modifiers["piercing"] = pi
+    bullet.damage = dam
+    return bullet
 
 def ship_dash(x,y,left,right,up,down,modifiers,dis):
 	#modifiers=stats

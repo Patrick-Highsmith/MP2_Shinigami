@@ -35,7 +35,7 @@ def get_enemy(time,difficulty,enemy_list):
 			enemy_list.append(enemy.Enemy_4(time))
 			enemy_list.append(enemy.Enemy_5(time))
 
-		if time >= 2400 and time % 90:
+		if time >= 2400 and time % 90 == 0:
 			enemy_list.append(enemy.Enemy_0a(time))
 			enemy_list.append(enemy.Enemy_0b(time))
 			enemy_list.append(enemy.Enemy_0c(time))
